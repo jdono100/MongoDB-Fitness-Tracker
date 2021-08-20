@@ -7,34 +7,24 @@ const WorkoutSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  exercises: [
-    {
-      type: {
-        type: String,
-        trim: true,
-        required: 'Exercise type required'
-      },
-      name: {
-        type: String,
-        trim: true,
-        required: 'Exercise name required'
-      },
-      duration: {
-        type: Number,
-      },
-      weight: {
-        type: Number,
-      },
-      reps: {
-        type: Number,
-      },
-      sets: {
-        type: Number,
-      }
-    }
-  ]
+  exercises: {
+    type: Array,
+    'default': []
+  },
+  workoutDuration: {
+    type: Number,
+    'default': 0
+  }
 });
 
-const Workout = mongoose.model('Workout', WorkoutSchema);
+WorkoutSchema.methods.setDuration = function() {
+  let workoutDuration = 0;
+  this.exercises.forEach(exercise => {
+    workoutDuration += exercise.duration;
+  });
+  this.workoutDuration = workoutDuration;
+};
+
+const Workout = mongoose.model('workout', WorkoutSchema);
 
 module.exports = Workout;
